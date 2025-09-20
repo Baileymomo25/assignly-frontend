@@ -22,5 +22,14 @@ function App() {
     </AppProvider>
   )
 }
-
+// Simple 404 component
+function NotFound() {
+  return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h1>404 - Page Not Found</h1>
+      <p>The page you're looking for doesn't exist.</p>
+      <a href="/">Go to homepage</a>
+    </div>
+  )
+}
 export default App
