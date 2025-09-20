@@ -1,6 +1,29 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 # Dependencies
 node_modules/
-*/node_modules
 
 # Production builds
 dist/
@@ -24,8 +47,9 @@ pids
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
+# Coverage directory
 coverage/
+*.lcov
 
 # nyc test coverage
 .nyc_output
@@ -49,7 +73,7 @@ jspm_packages/
 .env
 .env.test
 
-# parcel-bundler cache (https://parceljs.org/)
+# parcel-bundler cache
 .cache
 .parcel-cache
 
@@ -74,7 +98,7 @@ jspm_packages/
 # TernJS port file
 .tern-port
 
-# Stores VSCode versions used for testing VSCode extensions
+# Stores VSCode versions
 .vscode-test
 
 # IDE
@@ -84,3 +108,6 @@ jspm_packages/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local development
+*.local

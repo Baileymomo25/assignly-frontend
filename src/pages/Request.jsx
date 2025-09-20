@@ -16,17 +16,55 @@ export default function Request() {
     setLoading(true)
     
     try {
+      console.log('Submitting form data:', formData)
+      console.log('API URL:', import.meta.env.VITE_BACKEND_URL)
+      
+      // Test connection first
+      try {
+        const healthCheck = await api.get('/api/health')
+        console.log('Health check response:', healthCheck.data)
+      } catch (healthError) {
+        console.error('Health check failed:', healthError)
+        throw new Error('Cannot connect to server. Please try again later.')
+      }
+      
       // Submit to backend
       const response = await api.post('/api/requests', formData)
       
+      console.log('Response received:', response.data)
+      
       // Store request data in context
-      setRequestData(formData)
+      setRequestData({
+        ...formData,
+        id: response.data.requestId
+      })
       
       // Navigate to payment page
       navigate('/payment')
     } catch (error) {
       console.error('Error submitting form:', error)
-      alert('Error submitting request. Please try again.')
+      
+      let errorMessage = 'Error submitting request. Please try again.'
+      
+      if (error.response) {
+        // Server responded with error status
+        if (error.response.status === 400) {
+          errorMessage = error.response.data.error || 'Invalid data. Please check your inputs.'
+          if (error.response.data.missingFields) {
+            errorMessage += ` Missing: ${error.response.data.missingFields.join(', ')}`
+          }
+        } else if (error.response.status === 500) {
+          errorMessage = 'Server error. Please try again later.'
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        errorMessage = 'No response from server. Please check your connection and try again.'
+      } else if (error.message) {
+        // Something else happened
+        errorMessage = error.message
+      }
+      
+      alert(errorMessage)
     } finally {
       setIsSubmitting(false)
       setLoading(false)

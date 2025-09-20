@@ -5,7 +5,6 @@ import { useApp } from '../context/AppContext'
 import { CreditCard, Shield, CheckCircle } from 'lucide-react'
 import Card from '../components/UI/Card'
 import Button from '../components/UI/Button'
-import { initializePayment } from '../lib/paystack'
 
 export default function Payment() {
   const navigate = useNavigate()
@@ -20,69 +19,65 @@ export default function Payment() {
 
   const calculateAmount = () => {
     const prices = {
-      assignment: 4999, // in kobo (₦49.99)
-      slides: 3999,    // in kobo (₦39.99)
-      thesis: 19999,   // in kobo (₦199.99)
-      report: 7999,    // in kobo (₦79.99)
-      project: 14999   // in kobo (₦149.99)
+      assignment: 99999, // in kobo (₦49.99)
+      slides: 199999,    // in kobo (₦39.99)
+      thesis: 399999,   // in kobo (₦199.99)
+      report: 799999,    // in kobo (₦79.99)
+      project: 999999   // in kobo (₦149.99)
     }
     
     return prices[requestData?.workType] || 4999
   }
 
-  const handlePayment = async () => {
+  const handlePayment = () => {
     setIsProcessing(true)
     
-    try {
-      const paymentArgs = {
-        email: requestData.email,
-        amount: calculateAmount(),
-        currency: 'NGN',
-        ref: `TRX_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        metadata: {
-          custom_fields: [
-            {
-              display_name: "Full Name",
-              variable_name: "full_name",
-              value: requestData.fullName
-            },
-            {
-              display_name: "Phone Number",
-              variable_name: "phone_number",
-              value: requestData.phone
-            },
-            {
-              display_name: "Work Type",
-              variable_name: "work_type",
-              value: requestData.workType
-            }
-          ]
-        },
-        callback: (response) => {
-          // Payment was successful
-          const paymentResult = {
-            success: true,
-            transactionId: response.reference,
-            amount: calculateAmount() / 100, // Convert back to naira
-            timestamp: new Date().toISOString()
+    // Create Paystack payment handler
+    const paystackHandler = window.PaystackPop.setup({
+      key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+      email: requestData.email,
+      amount: calculateAmount(),
+      currency: 'NGN',
+      ref: `TRX_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      metadata: {
+        custom_fields: [
+          {
+            display_name: "Full Name",
+            variable_name: "full_name",
+            value: requestData.fullName
+          },
+          {
+            display_name: "Phone Number",
+            variable_name: "phone_number",
+            value: requestData.phone
+          },
+          {
+            display_name: "Work Type",
+            variable_name: "work_type",
+            value: requestData.workType
           }
-          
-          setPaymentData(paymentResult)
-          navigate('/success')
-        },
-        onClose: () => {
-          // User closed the payment modal
-          setIsProcessing(false)
-          alert('Payment was not completed. Please try again.')
+        ]
+      },
+      callback: (response) => {
+        // Payment was successful
+        const paymentResult = {
+          success: true,
+          transactionId: response.reference,
+          amount: calculateAmount() / 100, // Convert back to naira
+          timestamp: new Date().toISOString()
         }
+        
+        setPaymentData(paymentResult)
+        navigate('/success')
+      },
+      onClose: () => {
+        // User closed the payment modal
+        setIsProcessing(false)
+        alert('Payment was not completed. Please try again.')
       }
-
-      initializePayment(paymentArgs)
-    } catch (error) {
-      console.error('Payment error:', error)
-      setIsProcessing(false)
-      alert('An error occurred during payment. Please try again.')
-    }
+    })
+    
+    paystackHandler.openIframe()
   }
 
   if (!requestData) return null
@@ -148,12 +143,20 @@ export default function Payment() {
               </div>
 
               <Button 
-                onClick={handlePayment} 
-                disabled={isProcessing}
-                className="w-full"
-              >
-                {isProcessing ? 'Processing...' : `Pay ₦${(calculateAmount() / 100).toFixed(2)}`}
-              </Button>
+  onClick={handlePayment} 
+  disabled={isProcessing}
+  className="w-full flex items-center justify-center"
+>
+  {isProcessing ? (
+    <>
+      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Processing...
+    </>
+  ) : `Pay ₦${(calculateAmount() / 100).toFixed(2)}`}
+</Button>
             </div>
           </Card>
         </div>

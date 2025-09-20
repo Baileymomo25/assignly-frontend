@@ -1,7 +1,8 @@
-import { motion } from 'framer-motion'
-import { CheckCircle, MessageCircle } from 'lucide-react'
-import Card from '../components/UI/Card'
-import Button from '../components/UI/Button'
+// client/src/pages/Success.jsx
+import { motion } from 'framer-motion';
+import { CheckCircle, MessageCircle } from 'lucide-react';
+import Card from '../components/UI/Card';
+import Button from '../components/UI/Button';
 
 export default function Success() {
   const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '2348123456789'
