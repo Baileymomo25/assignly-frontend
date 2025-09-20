@@ -16,12 +16,15 @@ function App() {
             <Route path="/request" element={<Request />} />
             <Route path="/payment" element={<Payment />} />
             <Route path="/success" element={<Success />} />
+            {/* Add a catch-all route for 404s */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
       </Router>
     </AppProvider>
   )
 }
+
 // Simple 404 component
 function NotFound() {
   return (
@@ -32,4 +35,5 @@ function NotFound() {
     </div>
   )
 }
+
 export default App
