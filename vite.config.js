@@ -33,6 +33,6 @@ export default defineConfig({
     }
   },
   // Base path for production
-  base: './'
+  base: "./",
 }
 })
