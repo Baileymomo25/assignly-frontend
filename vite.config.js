@@ -11,6 +11,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
+  },
+    css: {
+      devSourcemap: false
+    },
     // Ensure assets are properly referenced
     assetsDir: 'assets',
     rollupOptions: {
@@ -18,9 +22,17 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js'
-      }
+      },
+       // Optimize chunking for better CSS handling
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['framer-motion', 'lucide-react']
+        }
     }
   },
   // Base path for production
   base: './'
+}
 })
