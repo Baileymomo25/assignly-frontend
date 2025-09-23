@@ -11,7 +11,7 @@ export default function Header() {
       animate={{ y: 0 }}
       className="bg-white shadow-sm border-b"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
             <Link to="/" className="flex items-center space-x-2">
@@ -19,7 +19,7 @@ export default function Header() {
               <img 
                 src={logoPath} 
                 alt="Assignly Logo" 
-                className="h-8 w-auto"
+                className="h-14 w-auto"
                 onError={(e) => {
                   // Fallback if the logo file doesn't exist
                   console.error('Logo not found:', logoPath);
@@ -34,8 +34,8 @@ export default function Header() {
               />
               {/* Text fallback logo - hidden by default */}
               <span 
-                className="text-xl font-bold text-gray-900 hidden"
-                style={{ display: 'none' }}
+                 className="text-4xl md:text-3xl font-bold text-primary-600" Made Simple
+                style={{ display: 'block' }}
               >
                 Assignly
               </span>
